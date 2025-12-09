@@ -1,0 +1,14 @@
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  visibility    Boolean   @default(true)
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+
+  @@map("user")
+}

@@ -1,34 +1,12 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-
-// Lazy load auth to prevent initialization errors
-let auth: any = null
-const getAuth = async () => {
-    if (!auth) {
-        try {
-            const authModule = await import('./lib/auth')
-            auth = authModule.auth
-        } catch (error) {
-            console.error('Failed to load auth module:', error)
-            return null
-        }
-    }
-    return auth
-}
+import { auth } from './lib/auth'
+import { headers } from 'next/headers'
 
 // This function can be marked `async` if using `await` inside
 export async function proxy(request: NextRequest) {
     try {
-        const authInstance = await getAuth()
-
-        // If auth failed to load, allow all requests
-        if (!authInstance) {
-            console.warn('Auth not available, allowing request')
-            return NextResponse.next()
-        }
-
-        const { headers } = await import('next/headers')
-        const session = await authInstance.api.getSession({ headers: await headers() })
+        const session = await auth.api.getSession({ headers: await headers() })
 
         // console.log('Session data in middleware:', session?.user.visibility)
 

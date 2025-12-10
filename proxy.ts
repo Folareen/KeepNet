@@ -33,7 +33,6 @@ export async function proxy(request: NextRequest) {
 
 // See "Matching Paths" below to learn more
 export const config = {
-    runtime: 'nodejs',
     matcher: [
         '/home',
         '/login',

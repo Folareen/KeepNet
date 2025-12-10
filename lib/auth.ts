@@ -1,10 +1,8 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { PrismaClient } from '../app/generated/prisma/client'
+import prisma from './prisma'
 import { nextCookies } from "better-auth/next-js";
 import sendEmail from "@/helpers/sendEmail";
-
-const prisma = new PrismaClient();
 
 
 export const auth = betterAuth({
@@ -29,7 +27,7 @@ export const auth = betterAuth({
         google: {
             clientId: process.env.GOOGLE_CLIENT_ID as string,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-            redirectURI: `${process.env.BETTER_AUTH_URL}/api/auth/callback/google`,
+            redirectURI: `${process.env.NEXT_PUBLIC_BETTER_AUTH_URL}/api/auth/callback/google`,
         },
     },
     callbacks: {},

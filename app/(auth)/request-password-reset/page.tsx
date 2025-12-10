@@ -16,7 +16,7 @@ export default function ResetPassword() {
         try {
             const { data, error } = await authClient.requestPasswordReset({
                 email: formData.get('email') as string,
-                redirectTo: `${process.env.BETTER_AUTH_SECRET}/reset-password`,
+                redirectTo: `${process.env.NEXT_PUBLIC_BETTER_AUTH_URL}/reset-password`,
             });
             if (error) {
                 throw error

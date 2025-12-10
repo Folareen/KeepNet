@@ -8,7 +8,6 @@
     "start": "next start",
     "postinstall": "prisma generate"
   },
-  "type": "module",
   "dependencies": {
     "@prisma/client": "6.19.0",
     "axios": "^1.13.2",

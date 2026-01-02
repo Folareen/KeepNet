@@ -19,7 +19,6 @@ export const auth = betterAuth({
             });
         },
         onPasswordReset: async ({ user }, request) => {
-            // your logic here
             console.log(`Password for user ${user.email} has been reset.`);
         },
     },
@@ -30,6 +29,23 @@ export const auth = betterAuth({
             redirectURI: `${process.env.NEXT_PUBLIC_BETTER_AUTH_URL}/api/auth/callback/google`,
         },
     },
-    callbacks: {},
+    callbacks: {
+        async onSignUp(user: any) {
+            if (!user.username && user.fullName) {
+                let baseUsername = user.fullName
+                    .toLowerCase()
+                    .replace(/\s+/g, '-')
+                    .replace(/[^a-z0-9-]/g, '');
+
+                const randomSuffix = Math.random().toString(36).substring(2, 6);
+                const username = `${baseUsername}-${randomSuffix}`;
+
+                await prisma.user.update({
+                    where: { id: user.id },
+                    data: { username }
+                });
+            }
+        }
+    },
     plugins: [nextCookies()]
 });

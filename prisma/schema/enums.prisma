@@ -1,0 +1,13 @@
+enum KeepType {
+  TEXT
+  RICH_TEXT
+  IMAGE
+  VIDEO
+  FILE
+}
+
+enum Visibility {
+  PUBLIC
+  PRIVATE
+  LOCKED
+}

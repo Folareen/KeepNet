@@ -1,6 +1,6 @@
 'use client';
 
-import ContinueWithGoogle from '@/app/components/auth/ContinueWithGoogle';
+import ContinueWithGoogle from '@/components/auth/ContinueWithGoogle';
 import { auth } from '@/lib/auth';
 import { authClient } from '@/lib/auth-client';
 import axios from 'axios';

@@ -1,14 +1,17 @@
 model User {
-  id            String    @id @default(cuid())
-  email         String    @unique
+  id            String       @id @default(cuid())
+  email         String       @unique
   name          String?
-  visibility    Boolean   @default(true)
-  emailVerified Boolean   @default(false)
+  username      String?      @unique
+  visibility    Boolean      @default(true)
+  emailVerified Boolean      @default(false)
   image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
   sessions      Session[]
   accounts      Account[]
+  keeps         Keep[]
+  collections   Collection[]
 
   @@map("user")
 }

@@ -18,7 +18,7 @@ export default function SignupPage() {
 
         try {
             const response = await authClient.signUp.email({
-                name: formData.get('name') as string,
+                name: formData.get('fullName') as string,
                 email: formData.get('email') as string,
                 password: formData.get('password') as string,
             });
@@ -54,8 +54,8 @@ export default function SignupPage() {
 
                 <form onSubmit={handleSubmit}>
                     <div className="mb-4">
-                        <label htmlFor="name">Name:</label>
-                        <input type="text" id="name" name="name" required className="w-full px-3 py-2 rounded-md bg-gray-800 text-white" />
+                        <label htmlFor="fullName">Full Name:</label>
+                        <input type="text" id="fullName" name="fullName" required className="w-full px-3 py-2 rounded-md bg-gray-800 text-white" />
                     </div>
                     <div className="mb-4">
                         <label htmlFor="email">Email:</label>

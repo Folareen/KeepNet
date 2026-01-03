@@ -4,6 +4,7 @@ import { authClient } from '@/lib/auth-client';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useState } from 'react';
+import { AiOutlineInfoCircle } from 'react-icons/ai';
 
 export default function SignupPage() {
     const router = useRouter()
@@ -19,6 +20,7 @@ export default function SignupPage() {
         try {
             const response = await authClient.signUp.email({
                 name: formData.get('fullName') as string,
+                username: formData.get('username') as string,
                 email: formData.get('email') as string,
                 password: formData.get('password') as string,
             });
@@ -56,6 +58,18 @@ export default function SignupPage() {
                     <div className="mb-4">
                         <label htmlFor="fullName">Full Name:</label>
                         <input type="text" id="fullName" name="fullName" required className="w-full px-3 py-2 rounded-md bg-gray-800 text-white" />
+                    </div>
+                    <div className="mb-4">
+                        <label htmlFor="username" className="flex items-center gap-2">
+                            Username:
+                            <span className="group relative">
+                                <AiOutlineInfoCircle className="w-4 h-4 text-gray-400 cursor-help" />
+                                <span className="invisible group-hover:visible absolute left-6 top-0 w-48 bg-gray-700 text-white text-xs rounded py-1 px-2 z-10">
+                                    Username should not contain the '@' symbol
+                                </span>
+                            </span>
+                        </label>
+                        <input type="text" id="username" name="username" required className="w-full px-3 py-2 rounded-md bg-gray-800 text-white" />
                     </div>
                     <div className="mb-4">
                         <label htmlFor="email">Email:</label>

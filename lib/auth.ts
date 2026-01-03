@@ -3,6 +3,7 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import prisma from './prisma'
 import { nextCookies } from "better-auth/next-js";
 import sendEmail from "@/helpers/sendEmail";
+import { username } from "better-auth/plugins";
 
 
 export const auth = betterAuth({
@@ -30,22 +31,22 @@ export const auth = betterAuth({
         },
     },
     callbacks: {
-        async onSignUp(user: any) {
-            if (!user.username && user.fullName) {
-                let baseUsername = user.fullName
-                    .toLowerCase()
-                    .replace(/\s+/g, '-')
-                    .replace(/[^a-z0-9-]/g, '');
+        // async onSignUp(user: any) {
+        //     if (!user.username && user.fullName) {
+        //         let baseUsername = user.fullName
+        //             .toLowerCase()
+        //             .replace(/\s+/g, '-')
+        //             .replace(/[^a-z0-9-]/g, '');
 
-                const randomSuffix = Math.random().toString(36).substring(2, 6);
-                const username = `${baseUsername}-${randomSuffix}`;
+        //         const randomSuffix = Math.random().toString(36).substring(2, 6);
+        //         const username = `${baseUsername}-${randomSuffix}`;
 
-                await prisma.user.update({
-                    where: { id: user.id },
-                    data: { username }
-                });
-            }
-        }
+        //         await prisma.user.update({
+        //             where: { id: user.id },
+        //             data: { username }
+        //         });
+        //     }
+        // }
     },
-    plugins: [nextCookies()]
+    plugins: [nextCookies(), username()]
 });

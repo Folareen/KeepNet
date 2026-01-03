@@ -12,8 +12,8 @@ model Keep {
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  collectionId String?
-  collection   Collection? @relation(fields: [collectionId], references: [id], onDelete: SetNull)
+  collectionId String
+  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
 
   isPinned Boolean @default(false)
 

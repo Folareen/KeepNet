@@ -1,6 +1,6 @@
 "use client"
 
-import { updateKeepContent } from "@/actions/updateKeepContent";
+import { updateKeep } from "@/actions/updateKeep";
 import { getUploadUrl } from "@/actions/getUploadUrl";
 import { useEffect, useRef, useState } from "react";
 
@@ -35,7 +35,7 @@ export default function ContentContainer({ keepType, content, title, isOwner, ke
             if (editContent !== content) {
                 setIsSaving(true);
                 try {
-                    await updateKeepContent(keepId, editContent, username, collectionId);
+                    await updateKeep(keepId, { content: editContent }, username, collectionId);
                     setLastSaved(new Date());
                 } catch (error) {
                     console.error(error);
@@ -73,7 +73,7 @@ export default function ContentContainer({ keepType, content, title, isOwner, ke
 
             xhr.addEventListener('load', async () => {
                 if (xhr.status === 200) {
-                    await updateKeepContent(keepId, newFileUrl, username, collectionId);
+                    await updateKeep(keepId, { content: newFileUrl }, username, collectionId);
                     setEditContent(newFileUrl);
                     setLastSaved(new Date());
                 }

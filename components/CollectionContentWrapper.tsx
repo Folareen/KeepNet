@@ -4,7 +4,9 @@ import { useState } from "react";
 import PasswordModal from "./PasswordModal";
 import CreateKeepModal from "./CreateKeepModal";
 import KeepCard from "./KeepCard";
-import { verifyCollectionPassword } from "@/actions/verifyPassword";
+import { verifyCollectionPassword } from "@/actions/verifyCollectionPassword";
+import { updateCollection } from "@/actions/updateCollection";
+import { MdEdit, MdCheck, MdClose } from "react-icons/md";
 
 type CollectionContentWrapperProps = {
     collection: {
@@ -26,6 +28,10 @@ type CollectionContentWrapperProps = {
 export default function CollectionContentWrapper({ collection, username, isOwner }: CollectionContentWrapperProps) {
     const [isUnlocked, setIsUnlocked] = useState(collection.visibility !== 'LOCKED' || isOwner);
     const [error, setError] = useState('');
+    const [isEditingTitle, setIsEditingTitle] = useState(false);
+    const [editTitle, setEditTitle] = useState(collection.title);
+    const [editDescription, setEditDescription] = useState(collection.description || '');
+    const [isSaving, setIsSaving] = useState(false);
 
     const handlePasswordSubmit = async (password: string) => {
         const isValid = await verifyCollectionPassword(collection.id, password);
@@ -36,6 +42,28 @@ export default function CollectionContentWrapper({ collection, username, isOwner
         } else {
             setError('Incorrect password. Please try again.');
         }
+    };
+
+    const handleSave = async () => {
+        setIsSaving(true);
+        try {
+            await updateCollection(
+                collection.id,
+                { title: editTitle, description: editDescription },
+                username
+            );
+            setIsEditingTitle(false);
+        } catch (error) {
+            console.error('Failed to update collection:', error);
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
+    const handleCancel = () => {
+        setEditTitle(collection.title);
+        setEditDescription(collection.description || '');
+        setIsEditingTitle(false);
     };
 
     if (!isUnlocked) {
@@ -51,12 +79,56 @@ export default function CollectionContentWrapper({ collection, username, isOwner
 
     return (
         <>
-            <div>
-                <h1 className='text-3xl font-bold'>{collection.title}</h1>
-                {collection.description && (
-                    <p className='text-gray-400 mt-2'>{collection.description}</p>
-                )}
-            </div>
+            {isEditingTitle ? (
+                <div className='space-y-3'>
+                    <input
+                        type='text'
+                        value={editTitle}
+                        onChange={(e) => setEditTitle(e.target.value)}
+                        className='text-3xl font-bold bg-gray-800 w-full px-3 py-2 rounded'
+                    />
+                    <textarea
+                        value={editDescription}
+                        onChange={(e) => setEditDescription(e.target.value)}
+                        placeholder='Add description...'
+                        className='text-gray-400 bg-gray-800 w-full px-3 py-2 rounded resize-none'
+                        rows={2}
+                    />
+                    <div className='flex gap-2'>
+                        <button
+                            onClick={handleSave}
+                            disabled={isSaving}
+                            className='flex items-center gap-1 bg-green-600 px-3 py-1 rounded hover:bg-green-700 disabled:opacity-50'
+                        >
+                            <MdCheck /> {isSaving ? 'Saving...' : 'Save'}
+                        </button>
+                        <button
+                            onClick={handleCancel}
+                            disabled={isSaving}
+                            className='flex items-center gap-1 bg-gray-600 px-3 py-1 rounded hover:bg-gray-700 disabled:opacity-50'
+                        >
+                            <MdClose /> Cancel
+                        </button>
+                    </div>
+                </div>
+            ) : (
+                <div className='flex items-center gap-3'>
+                    <div>
+                        <h1 className='text-3xl font-bold'>{collection.title}</h1>
+                        {collection.description && (
+                            <p className='text-gray-400 mt-2'>{collection.description}</p>
+                        )}
+                    </div>
+                    {isOwner && (
+                        <button
+                            onClick={() => setIsEditingTitle(true)}
+                            className='text-gray-400 hover:text-white'
+                        >
+                            <MdEdit size={20} />
+                        </button>
+                    )}
+                </div>
+            )}
 
             <div className='flex justify-between items-center'>
                 <h2 className='text-2xl'>Keeps</h2>

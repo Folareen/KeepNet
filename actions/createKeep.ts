@@ -17,7 +17,7 @@ export async function createKeep(formData: FormData) {
     const type = formData.get("type") as "TEXT" | "RICH_TEXT" | "IMAGE" | "VIDEO" | "FILE";
     const visibility = formData.get("visibility") as "PUBLIC" | "PRIVATE" | "LOCKED";
     const password = formData.get("password") as string | null;
-    const collectionId = formData.get("collectionId") as string | null;
+    const collectionId = formData.get("collectionId") as string;
 
     if (!title) {
         throw new Error("Title is required");

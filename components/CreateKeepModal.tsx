@@ -67,8 +67,10 @@ export default function CreateKeepModal({ collectionId }: CreateKeepModalProps) 
                         <form action={async (formData: FormData) => {
                             if (collectionId) {
                                 formData.append("collectionId", collectionId);
+                                await createKeep(formData);
+                            } else {
+                                throw new Error("A keep must be created inside a collection");
                             }
-                            await createKeep(formData);
                         }}>
                             <div className="mb-4">
                                 <label className="block mb-2">Title</label>

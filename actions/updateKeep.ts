@@ -4,7 +4,12 @@ import { getUser } from "@/lib/getUser";
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
-export async function updateKeepContent(keepId: string, content: string, username: string, collectionId?: string) {
+export async function updateKeep(
+    keepId: string,
+    data: { title?: string; description?: string; content?: string },
+    username: string,
+    collectionId?: string
+) {
     const user = await getUser();
 
     if (!user) {
@@ -25,7 +30,11 @@ export async function updateKeepContent(keepId: string, content: string, usernam
 
     await prisma.keep.update({
         where: { id: keepId },
-        data: { content },
+        data: {
+            ...(data.title !== undefined && { title: data.title }),
+            ...(data.description !== undefined && { description: data.description }),
+            ...(data.content !== undefined && { content: data.content }),
+        },
     });
 
     if (collectionId) {

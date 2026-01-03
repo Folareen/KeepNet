@@ -7,9 +7,8 @@ type UserData = {
     id: string;
     email: string;
     name: string | null;
-    username: string | null;
-    image: string | null;
-    visibility: boolean;
+    username?: string | null;
+    image?: string | null;
     emailVerified: boolean;
     createdAt: Date;
     updatedAt: Date;

@@ -1,8 +1,8 @@
-import { getUserByUsername } from '@/lib/getUserByUsername'
 import AppLayout from '@/components/AppLayout'
-import CreateCollectionModal from '@/components/CreateCollectionModal'
 import CollectionCard from '@/components/CollectionCard'
+import CreateCollectionModal from '@/components/CreateCollectionModal'
 import { getUser } from '@/lib/getUser'
+import { getUserByUsername } from '@/lib/getUserByUsername'
 import { getUserCollections } from '@/lib/getUserCollections'
 import Image from 'next/image'
 import avatarImage from '../assets/images/avatar.png'
@@ -21,6 +21,22 @@ export default async function UserPage({ params }: { params: Promise<{ username:
     }
 
     const isOwner = currentUser?.id === user.id;
+
+    if (!user.visibility && !isOwner) {
+        return (
+            <AppLayout>
+                <div className='py-4 min-h-[60vh] flex flex-col items-center justify-center'>
+                    <Image src={avatarImage} alt='user profile picture' width={100} height={100} className='rounded-full' />
+                    <p className='text-center text-gray-400 mt-4'>
+                        @{user.username}
+                    </p>
+                    <p className='text-center text-gray-500 text-sm mt-2'>
+                        Private account
+                    </p>
+                </div>
+            </AppLayout>
+        )
+    }
 
     const collections = await getUserCollections(user.id);
 

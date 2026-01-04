@@ -4,6 +4,7 @@ import { updateKeep } from "@/actions/updateKeep";
 import { uploadToS3, deleteFromS3 } from "@/actions/s3Upload";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import TiptapEditor from "./TiptapEditor";
 
 type ContentContainerProps = {
     keepType: string;
@@ -27,7 +28,7 @@ export default function ContentContainer({ keepType, content, title, isOwner, ke
     const router = useRouter();
 
     useEffect(() => {
-        if (!isEditing || keepType !== 'TEXT') return;
+        if (!isEditing || (keepType !== 'TEXT' && keepType !== 'RICH_TEXT')) return;
 
         if (saveTimeoutRef.current) {
             clearTimeout(saveTimeoutRef.current);
@@ -129,7 +130,8 @@ export default function ContentContainer({ keepType, content, title, isOwner, ke
         if (keepType === 'RICH_TEXT') {
             return (
                 <div className='prose prose-invert max-w-none'>
-                    {content || 'No content yet. Click edit to add content.'}
+                    <div dangerouslySetInnerHTML={{ __html: content || '' }} />
+                    {!content && <p className='text-gray-400'>No content yet. Click edit to add content.</p>}
                 </div>
             );
         }
@@ -179,7 +181,7 @@ export default function ContentContainer({ keepType, content, title, isOwner, ke
     };
 
     const renderEditMode = () => {
-        if (keepType === 'TEXT' || keepType === 'RICH_TEXT') {
+        if (keepType === 'TEXT') {
             return (
                 <div>
                     <div className='flex justify-between items-center mb-2'>
@@ -194,8 +196,27 @@ export default function ContentContainer({ keepType, content, title, isOwner, ke
                         value={editContent}
                         onChange={(e) => setEditContent(e.target.value)}
                         className='w-full h-[500px] bg-gray-900 text-white p-4 rounded resize-none focus:outline-none focus:ring-2 focus:ring-blue-500'
-                        placeholder={keepType === 'RICH_TEXT' ? 'Enter markdown content...' : 'Enter text content...'}
+                        placeholder='Enter text content...'
                         autoFocus
+                    />
+                </div>
+            );
+        }
+        if (keepType === 'RICH_TEXT') {
+            return (
+                <div>
+                    <div className='flex justify-between items-center mb-2'>
+                        <div className='text-sm text-gray-400'>
+                            {isSaving && <span>Saving...</span>}
+                            {!isSaving && lastSaved && (
+                                <span>Last saved: {lastSaved.toLocaleTimeString()}</span>
+                            )}
+                        </div>
+                    </div>
+                    <TiptapEditor
+                        content={editContent}
+                        onChange={setEditContent}
+                        editable={true}
                     />
                 </div>
             );

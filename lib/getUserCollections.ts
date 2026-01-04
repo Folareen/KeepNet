@@ -7,6 +7,7 @@ export const getUserCollections = async (userId: string) => {
             id: true,
             title: true,
             description: true,
+            visibility: true,
             _count: {
                 select: { keeps: true }
             }

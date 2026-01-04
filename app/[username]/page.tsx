@@ -1,5 +1,5 @@
 import AppLayout from '@/components/AppLayout'
-import CollectionCard from '@/components/CollectionCard'
+import CollectionSearchInput from '@/components/CollectionSearchInput'
 import CreateCollectionModal from '@/components/CreateCollectionModal'
 import { getUser } from '@/lib/getUser'
 import { getUserByUsername } from '@/lib/getUserByUsername'
@@ -58,22 +58,11 @@ export default async function UserPage({ params }: { params: Promise<{ username:
                     {isOwner && <CreateCollectionModal />}
                 </div>
 
-                {collections.length === 0 ? (
-                    <div className='text-center text-gray-400 py-8'>
-                        No collections yet. {isOwner && "Create your first collection!"}
-                    </div>
-                ) : (
-                    <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-                        {collections.map((collection) => (
-                            <CollectionCard
-                                key={collection.id}
-                                collection={collection}
-                                username={username}
-                                isOwner={isOwner}
-                            />
-                        ))}
-                    </div>
-                )}
+                <CollectionSearchInput
+                    collections={collections}
+                    username={username}
+                    isOwner={isOwner}
+                />
             </div>
 
         </AppLayout>

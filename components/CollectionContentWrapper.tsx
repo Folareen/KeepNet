@@ -1,12 +1,12 @@
 "use client"
 
-import { useState } from "react";
-import PasswordModal from "./PasswordModal";
+import { updateCollection } from "@/actions/updateCollection";
+import { verifyCollectionPassword } from "@/actions/verifyCollectionPassword";
+import { useMemo, useState } from "react";
+import { MdCheck, MdClose, MdEdit } from "react-icons/md";
 import CreateKeepModal from "./CreateKeepModal";
 import KeepCard from "./KeepCard";
-import { verifyCollectionPassword } from "@/actions/verifyCollectionPassword";
-import { updateCollection } from "@/actions/updateCollection";
-import { MdEdit, MdCheck, MdClose } from "react-icons/md";
+import PasswordModal from "./PasswordModal";
 
 type CollectionContentWrapperProps = {
     collection: {
@@ -32,6 +32,17 @@ export default function CollectionContentWrapper({ collection, username, isOwner
     const [editTitle, setEditTitle] = useState(collection.title);
     const [editDescription, setEditDescription] = useState(collection.description || '');
     const [isSaving, setIsSaving] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
+
+    const filteredKeeps = useMemo(() => {
+        if (!searchQuery.trim()) {
+            return collection.keeps;
+        }
+
+        return collection.keeps.filter(keep =>
+            keep.title.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+    }, [collection.keeps, searchQuery]);
 
     const handlePasswordSubmit = async (password: string) => {
         const isValid = await verifyCollectionPassword(collection.id, password);
@@ -135,13 +146,27 @@ export default function CollectionContentWrapper({ collection, username, isOwner
                 {isOwner && <CreateKeepModal collectionId={collection.id} />}
             </div>
 
+            {collection.keeps.length > 0 && (
+                <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search keeps by title..."
+                    className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:border-blue-500 focus:outline-none"
+                />
+            )}
+
             {collection.keeps.length === 0 ? (
                 <div className='text-center text-gray-400 py-8'>
                     No keeps yet. {isOwner && "Create your first keep!"}
                 </div>
+            ) : filteredKeeps.length === 0 ? (
+                <div className='text-center text-gray-400 py-8'>
+                    No keeps found matching "{searchQuery}"
+                </div>
             ) : (
                 <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-                    {collection.keeps.map((keep) => (
+                    {filteredKeeps.map((keep) => (
                         <KeepCard
                             key={keep.id}
                             keep={keep}

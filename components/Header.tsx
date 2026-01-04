@@ -28,13 +28,6 @@ const Header = ({ user }: HeaderProps) => {
                     Home
                 </Link>
             </h1>
-            <div>
-                <input
-                    type="text"
-                    placeholder='Search keeps and collections...'
-                    className='px-3 py-2 rounded-md bg-gray-800 text-white min-w-[400px]'
-                />
-            </div>
 
             <div className='flex items-center gap-4'>
                 <span className='text-sm text-gray-300'>

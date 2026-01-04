@@ -4,6 +4,7 @@ import { getUser } from "@/lib/getUser";
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { deleteFromS3 } from "./s3Upload";
 
 export async function deleteKeep(keepId: string, username: string, collectionId?: string) {
     const user = await getUser();
@@ -22,6 +23,10 @@ export async function deleteKeep(keepId: string, username: string, collectionId?
 
     if (keep.userId !== user.id) {
         throw new Error("Unauthorized");
+    }
+
+    if (keep.content && (keep.type === 'IMAGE' || keep.type === 'VIDEO' || keep.type === 'FILE')) {
+        await deleteFromS3(keep.content);
     }
 
     await prisma.keep.delete({

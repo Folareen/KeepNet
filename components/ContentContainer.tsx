@@ -1,8 +1,9 @@
 "use client"
 
 import { updateKeep } from "@/actions/updateKeep";
-import { getUploadUrl } from "@/actions/getUploadUrl";
+import { uploadToS3, deleteFromS3 } from "@/actions/s3Upload";
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 
 type ContentContainerProps = {
     keepType: string;
@@ -23,6 +24,7 @@ export default function ContentContainer({ keepType, content, title, isOwner, ke
     const [lastSaved, setLastSaved] = useState<Date | null>(null);
     const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const router = useRouter();
 
     useEffect(() => {
         if (!isEditing || keepType !== 'TEXT') return;
@@ -56,34 +58,60 @@ export default function ContentContainer({ keepType, content, title, isOwner, ke
         const file = e.target.files?.[0];
         if (!file) return;
 
+        const validations = {
+            IMAGE: /^image\//,
+            VIDEO: /^video\//,
+            FILE: /.*/
+        };
+
+        const allowedType = validations[keepType as keyof typeof validations];
+        if (allowedType && !allowedType.test(file.type)) {
+            alert(`Invalid file type. Please upload a ${keepType.toLowerCase()}.`);
+            return;
+        }
+
+        const maxSize = 100 * 1024 * 1024;
+        if (file.size > maxSize) {
+            alert('File size too large. Maximum size is 100MB.');
+            return;
+        }
+
         setIsUploading(true);
         setUploadProgress(0);
 
         try {
-            const { uploadUrl, fileUrl: newFileUrl } = await getUploadUrl(file.name, file.type);
+            const arrayBuffer = await file.arrayBuffer();
+            const bytes = new Uint8Array(arrayBuffer);
 
-            const xhr = new XMLHttpRequest();
+            let binary = '';
+            const chunkSize = 0x8000;
+            for (let i = 0; i < bytes.length; i += chunkSize) {
+                const chunk = bytes.subarray(i, i + chunkSize);
+                binary += String.fromCharCode.apply(null, Array.from(chunk));
+            }
+            const base64 = btoa(binary);
 
-            xhr.upload.addEventListener('progress', (event) => {
-                if (event.lengthComputable) {
-                    const percentComplete = (event.loaded / event.total) * 100;
-                    setUploadProgress(Math.round(percentComplete));
-                }
-            });
+            if (content && (keepType === 'IMAGE' || keepType === 'VIDEO' || keepType === 'FILE')) {
+                await deleteFromS3(content);
+            }
 
-            xhr.addEventListener('load', async () => {
-                if (xhr.status === 200) {
-                    await updateKeep(keepId, { content: newFileUrl }, username, collectionId);
-                    setEditContent(newFileUrl);
-                    setLastSaved(new Date());
-                }
-            });
+            const fileUrl = await uploadToS3(
+                base64,
+                file.name,
+                file.type,
+                'keep',
+                username,
+                collectionId || '',
+                keepId
+            );
 
-            xhr.open('PUT', uploadUrl);
-            xhr.setRequestHeader('Content-Type', file.type);
-            xhr.send(file);
+            await updateKeep(keepId, { content: fileUrl }, username, collectionId);
+            setEditContent(fileUrl);
+            setLastSaved(new Date());
+            router.refresh();
         } catch (error) {
-            console.error(error);
+            console.error('Upload error:', error);
+            alert('Failed to upload file');
         } finally {
             setIsUploading(false);
             setUploadProgress(0);

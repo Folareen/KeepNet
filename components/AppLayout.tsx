@@ -1,6 +1,5 @@
 import { getUser } from "@/lib/getUser";
 import Header from "./Header";
-import { redirect } from "next/navigation";
 
 export default async function AppLayout({
     children,
@@ -8,10 +7,6 @@ export default async function AppLayout({
     children: React.ReactNode;
 }) {
     const user = await getUser();
-
-    if (!user) {
-        redirect('/login');
-    }
 
     return (
         <div className="min-h-screen bg-gray-950 text-white">

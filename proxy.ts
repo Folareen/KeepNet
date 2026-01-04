@@ -8,13 +8,11 @@ export async function proxy(request: NextRequest) {
     try {
         const session = await auth.api.getSession({ headers: await headers() })
 
-        // console.log('Session data in middleware:', session?.user.visibility)
-
         const isAuthenticated = session?.user ? true : false
 
         const isAuthPath = request.nextUrl.pathname.startsWith('/login') || request.nextUrl.pathname.startsWith('/signup')
 
-        const isProtectedPath = request.nextUrl.pathname.startsWith('/home')
+        const isProtectedPath = request.nextUrl.pathname == '/home'
 
         if (isAuthPath && isAuthenticated) {
             return NextResponse.redirect(new URL('/home', request.url))

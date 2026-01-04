@@ -15,7 +15,7 @@ type UserData = {
 };
 
 type HeaderProps = {
-    user: UserData;
+    user: UserData | null;
 };
 
 const Header = ({ user }: HeaderProps) => {
@@ -31,17 +31,28 @@ const Header = ({ user }: HeaderProps) => {
 
             <div className='flex items-center gap-4'>
                 <span className='text-sm text-gray-300'>
-                    {user.name || user.email}
+                    {user ? (user.name || user.email) : 'Guest'}
                 </span>
-                <button
-                    onClick={async () => {
-                        await authClient.signOut();
-                        push('/login');
-                    }}
-                    className='bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700'
-                >
-                    Logout
-                </button>
+                {
+                    user ? (
+                        <button
+                            onClick={async () => {
+                                await authClient.signOut();
+                                push('/login');
+                            }}
+                            className='bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700'
+                        >
+                            Logout
+                        </button>
+                    ) : (
+                        <button
+                            onClick={() => push('/login')}
+                            className='bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700'
+                        >
+                            Login
+                        </button>
+                    )
+                }
             </div>
         </header>
     )

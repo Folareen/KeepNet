@@ -4,6 +4,7 @@ import { getUser } from "@/lib/getUser";
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import * as argon2 from "argon2";
 
 export async function createKeep(formData: FormData) {
     const user = await getUser();
@@ -23,13 +24,18 @@ export async function createKeep(formData: FormData) {
         throw new Error("Title is required");
     }
 
+    let hashedPassword = null;
+    if (visibility === "LOCKED" && password) {
+        hashedPassword = await argon2.hash(password);
+    }
+
     const keep = await prisma.keep.create({
         data: {
             title,
             description,
             type,
             visibility,
-            password,
+            password: hashedPassword,
             userId: user.id,
             collectionId,
         },

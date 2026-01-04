@@ -1,6 +1,7 @@
 "use server"
 
 import prisma from "@/lib/prisma";
+import * as argon2 from "argon2";
 
 export async function verifyKeepPassword(keepId: string, password: string): Promise<boolean> {
     const keep = await prisma.keep.findUnique({
@@ -16,5 +17,14 @@ export async function verifyKeepPassword(keepId: string, password: string): Prom
         return true;
     }
 
-    return keep.password === password;
+    if (!keep.password) {
+        return false;
+    }
+
+    try {
+        return await argon2.verify(keep.password, password);
+    } catch (error) {
+        console.error("Error verifying password:", error);
+        return false;
+    }
 }

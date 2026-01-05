@@ -27,6 +27,7 @@ export const uploadToS3 = async (
     keepId?: string
 ): Promise<string> => {
     try {
+        console.log('Starting S3 upload...');
         let key: string;
 
         if (uploadType === 'keep') {

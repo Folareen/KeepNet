@@ -9,6 +9,7 @@ type UpdateUserData = {
     username?: string;
     displayUsername?: string;
     visibility?: boolean;
+    image?: string | null;
 };
 
 export async function updateUser(data: UpdateUserData) {
@@ -29,16 +30,28 @@ export async function updateUser(data: UpdateUserData) {
             }
         }
 
+        const updateData: any = {};
+
+        if (data.name) {
+            updateData.name = data.name;
+        }
+
+        if (data.username) {
+            updateData.username = data.username;
+            updateData.displayUsername = data.username;
+        }
+
+        if (data.visibility !== undefined) {
+            updateData.visibility = data.visibility;
+        }
+
+        if (data.image !== undefined) {
+            updateData.image = data.image;
+        }
+
         const updatedUser = await prisma.user.update({
             where: { id: currentUser.id },
-            data: {
-                ...(data.name && { name: data.name }),
-                ...(data.username && {
-                    username: data.username,
-                    displayUsername: data.username
-                }),
-                ...(data.visibility !== undefined && { visibility: data.visibility })
-            }
+            data: updateData
         });
 
         revalidatePath('/home');

@@ -1,8 +1,10 @@
 import AppLayout from '@/components/AppLayout'
+import Breadcrumb from '@/components/Breadcrumb'
 import KeepContentWrapper from '@/components/KeepContentWrapper'
 import { getKeepById } from '@/lib/getKeepById'
 import { getUser } from '@/lib/getUser'
-import Link from 'next/link'
+import { getUserByUsername } from '@/lib/getUserByUsername'
+import { MdHome, MdPerson, MdFolder, MdDescription } from 'react-icons/md'
 
 export default async function KeepPage({ params }: { params: Promise<{ username: string, collectionId: string, keepId: string }> }) {
     const { username, collectionId, keepId } = await params
@@ -17,26 +19,20 @@ export default async function KeepPage({ params }: { params: Promise<{ username:
         )
     }
 
+    const user = await getUserByUsername(username)
     const isOwner = currentUser?.id === keep.userId
 
     return (
         <AppLayout>
-            <div className='flex flex-col h-[calc(100vh-80px)]'>
-                <div className='text-sm text-gray-400 mb-4'>
-                    <Link href={`/${username}`} className='hover:text-white'>
-                        @{username}
-                    </Link>
-                    {keep.collection && (
-                        <>
-                            <span className='mx-2'>/</span>
-                            <Link href={`/${username}/${collectionId}`} className='hover:text-white'>
-                                {keep.collection.title}
-                            </Link>
-                        </>
-                    )}
-                    <span className='mx-2'>/</span>
-                    <span className='text-white'>{keep.title}</span>
-                </div>
+            <Breadcrumb
+                items={[
+                    { label: 'Home', href: '/home', icon: <MdHome size={18} /> },
+                    { label: user?.name || username, href: `/${username}`, icon: <MdPerson size={18} /> },
+                    { label: keep.collection?.title || 'Collection', href: `/${username}/${collectionId}`, icon: <MdFolder size={18} /> },
+                    { label: keep.title, href: `/${username}/${collectionId}/${keepId}`, icon: <MdDescription size={18} /> }
+                ]}
+            />
+            <div className='flex flex-col h-[calc(100vh-160px)]'>
 
                 <KeepContentWrapper
                     keep={{

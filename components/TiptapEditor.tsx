@@ -3,14 +3,58 @@
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { useEffect } from 'react'
+import {
+    MdFormatBold,
+    MdFormatItalic,
+    MdStrikethroughS,
+    MdFormatListBulleted,
+    MdFormatListNumbered,
+    MdCode,
+    MdFormatQuote,
+    MdHorizontalRule,
+    MdTitle,
+    MdUndo,
+    MdRedo
+} from 'react-icons/md'
 
 type TiptapEditorProps = {
     content: string
     onChange: (content: string) => void
     editable?: boolean
+    isFullscreen?: boolean
 }
 
-export default function TiptapEditor({ content, onChange, editable = true }: TiptapEditorProps) {
+const ToolbarButton = ({
+    onClick,
+    isActive,
+    icon: Icon,
+    tooltip
+}: {
+    onClick: () => void;
+    isActive?: boolean;
+    icon: any;
+    tooltip: string;
+}) => (
+    <button
+        onClick={onClick}
+        className={`p-2 rounded-lg transition-all relative group ${isActive
+            ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20'
+            : 'bg-gray-800/50 text-gray-400 hover:bg-gray-700/50 hover:text-white'
+            }`}
+        type="button"
+    >
+        <Icon size={20} />
+        <span className='invisible group-hover:visible absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-1 bg-gray-900 text-white text-xs rounded-lg whitespace-nowrap z-10 border border-gray-700'>
+            {tooltip}
+        </span>
+    </button>
+)
+
+export default function TiptapEditor({ content, onChange, editable = true, isFullscreen = false }: TiptapEditorProps) {
+    const editorClasses = isFullscreen
+        ? 'prose prose-invert max-w-none focus:outline-none h-full w-full p-8 text-base'
+        : 'prose prose-invert max-w-none focus:outline-none min-h-[500px] p-6';
+
     const editor = useEditor({
         extensions: [StarterKit],
         content,
@@ -18,7 +62,7 @@ export default function TiptapEditor({ content, onChange, editable = true }: Tip
         immediatelyRender: false,
         editorProps: {
             attributes: {
-                class: 'prose prose-invert max-w-none focus:outline-none min-h-[500px] p-4',
+                class: editorClasses,
             },
         },
         onUpdate: ({ editor }) => {
@@ -40,79 +84,112 @@ export default function TiptapEditor({ content, onChange, editable = true }: Tip
         return null
     }
 
+    const containerClasses = isFullscreen
+        ? 'bg-gray-950 h-full w-full flex flex-col'
+        : 'bg-gray-900 rounded-xl border border-gray-800 overflow-hidden';
+
+    const toolbarClasses = isFullscreen
+        ? 'p-3 bg-gray-900 border-b border-gray-800'
+        : 'border-b border-gray-700 p-3 bg-gray-800';
+
     return (
-        <div className='bg-gray-900 rounded'>
+        <div className={containerClasses}>
             {editable && (
-                <div className='border-b border-gray-700 p-2 flex gap-2 flex-wrap'>
-                    <button
-                        onClick={() => editor.chain().focus().toggleBold().run()}
-                        className={`px-3 py-1 rounded ${editor.isActive('bold') ? 'bg-blue-600' : 'bg-gray-700'} hover:bg-blue-700`}
-                    >
-                        Bold
-                    </button>
-                    <button
-                        onClick={() => editor.chain().focus().toggleItalic().run()}
-                        className={`px-3 py-1 rounded ${editor.isActive('italic') ? 'bg-blue-600' : 'bg-gray-700'} hover:bg-blue-700`}
-                    >
-                        Italic
-                    </button>
-                    <button
-                        onClick={() => editor.chain().focus().toggleStrike().run()}
-                        className={`px-3 py-1 rounded ${editor.isActive('strike') ? 'bg-blue-600' : 'bg-gray-700'} hover:bg-blue-700`}
-                    >
-                        Strike
-                    </button>
-                    <button
-                        onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-                        className={`px-3 py-1 rounded ${editor.isActive('heading', { level: 1 }) ? 'bg-blue-600' : 'bg-gray-700'} hover:bg-blue-700`}
-                    >
-                        H1
-                    </button>
-                    <button
-                        onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-                        className={`px-3 py-1 rounded ${editor.isActive('heading', { level: 2 }) ? 'bg-blue-600' : 'bg-gray-700'} hover:bg-blue-700`}
-                    >
-                        H2
-                    </button>
-                    <button
-                        onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-                        className={`px-3 py-1 rounded ${editor.isActive('heading', { level: 3 }) ? 'bg-blue-600' : 'bg-gray-700'} hover:bg-blue-700`}
-                    >
-                        H3
-                    </button>
-                    <button
-                        onClick={() => editor.chain().focus().toggleBulletList().run()}
-                        className={`px-3 py-1 rounded ${editor.isActive('bulletList') ? 'bg-blue-600' : 'bg-gray-700'} hover:bg-blue-700`}
-                    >
-                        Bullet List
-                    </button>
-                    <button
-                        onClick={() => editor.chain().focus().toggleOrderedList().run()}
-                        className={`px-3 py-1 rounded ${editor.isActive('orderedList') ? 'bg-blue-600' : 'bg-gray-700'} hover:bg-blue-700`}
-                    >
-                        Ordered List
-                    </button>
-                    <button
-                        onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-                        className={`px-3 py-1 rounded ${editor.isActive('codeBlock') ? 'bg-blue-600' : 'bg-gray-700'} hover:bg-blue-700`}
-                    >
-                        Code Block
-                    </button>
-                    <button
-                        onClick={() => editor.chain().focus().toggleBlockquote().run()}
-                        className={`px-3 py-1 rounded ${editor.isActive('blockquote') ? 'bg-blue-600' : 'bg-gray-700'} hover:bg-blue-700`}
-                    >
-                        Quote
-                    </button>
-                    <button
-                        onClick={() => editor.chain().focus().setHorizontalRule().run()}
-                        className='px-3 py-1 rounded bg-gray-700 hover:bg-blue-700'
-                    >
-                        Divider
-                    </button>
+                <div className={toolbarClasses}>
+                    <div className='flex gap-1 flex-wrap'>
+                        <ToolbarButton
+                            onClick={() => editor.chain().focus().undo().run()}
+                            icon={MdUndo}
+                            tooltip="Undo (Ctrl+Z)"
+                        />
+                        <ToolbarButton
+                            onClick={() => editor.chain().focus().redo().run()}
+                            icon={MdRedo}
+                            tooltip="Redo (Ctrl+Y)"
+                        />
+
+                        <div className='w-px h-8 bg-gray-700/50 mx-1'></div>
+
+                        <ToolbarButton
+                            onClick={() => editor.chain().focus().toggleBold().run()}
+                            isActive={editor.isActive('bold')}
+                            icon={MdFormatBold}
+                            tooltip="Bold (Ctrl+B)"
+                        />
+                        <ToolbarButton
+                            onClick={() => editor.chain().focus().toggleItalic().run()}
+                            isActive={editor.isActive('italic')}
+                            icon={MdFormatItalic}
+                            tooltip="Italic (Ctrl+I)"
+                        />
+                        <ToolbarButton
+                            onClick={() => editor.chain().focus().toggleStrike().run()}
+                            isActive={editor.isActive('strike')}
+                            icon={MdStrikethroughS}
+                            tooltip="Strikethrough"
+                        />
+
+                        <div className='w-px h-8 bg-gray-700/50 mx-1'></div>
+
+                        <ToolbarButton
+                            onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+                            isActive={editor.isActive('heading', { level: 1 })}
+                            icon={() => <MdTitle size={20} />}
+                            tooltip="Heading 1"
+                        />
+                        <ToolbarButton
+                            onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+                            isActive={editor.isActive('heading', { level: 2 })}
+                            icon={() => <span className='text-lg font-bold'>H2</span>}
+                            tooltip="Heading 2"
+                        />
+                        <ToolbarButton
+                            onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+                            isActive={editor.isActive('heading', { level: 3 })}
+                            icon={() => <span className='text-base font-bold'>H3</span>}
+                            tooltip="Heading 3"
+                        />
+
+                        <div className='w-px h-8 bg-gray-700/50 mx-1'></div>
+
+                        <ToolbarButton
+                            onClick={() => editor.chain().focus().toggleBulletList().run()}
+                            isActive={editor.isActive('bulletList')}
+                            icon={MdFormatListBulleted}
+                            tooltip="Bullet List"
+                        />
+                        <ToolbarButton
+                            onClick={() => editor.chain().focus().toggleOrderedList().run()}
+                            isActive={editor.isActive('orderedList')}
+                            icon={MdFormatListNumbered}
+                            tooltip="Numbered List"
+                        />
+
+                        <div className='w-px h-8 bg-gray-700/50 mx-1'></div>
+
+                        <ToolbarButton
+                            onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+                            isActive={editor.isActive('codeBlock')}
+                            icon={MdCode}
+                            tooltip="Code Block"
+                        />
+                        <ToolbarButton
+                            onClick={() => editor.chain().focus().toggleBlockquote().run()}
+                            isActive={editor.isActive('blockquote')}
+                            icon={MdFormatQuote}
+                            tooltip="Quote"
+                        />
+                        <ToolbarButton
+                            onClick={() => editor.chain().focus().setHorizontalRule().run()}
+                            icon={MdHorizontalRule}
+                            tooltip="Horizontal Line"
+                        />
+                    </div>
                 </div>
             )}
-            <EditorContent editor={editor} />
+            <div className={isFullscreen ? 'flex-1 overflow-y-auto min-h-0' : 'min-h-[500px]'}>
+                <EditorContent editor={editor} />
+            </div>
         </div>
     )
 }

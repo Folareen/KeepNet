@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { deleteKeep } from "@/actions/deleteKeep";
+import { MdDelete } from 'react-icons/md';
 
 type DeleteKeepButtonProps = {
     keepId: string;
@@ -27,9 +28,10 @@ export default function DeleteKeepButton({ keepId, username, collectionId }: Del
         <>
             <button
                 onClick={() => setIsOpen(true)}
-                className='bg-red-600 px-4 py-2 rounded hover:bg-red-700'
+                className='p-2 bg-red-600 hover:bg-red-700 rounded-lg transition-colors'
+                title='Delete'
             >
-                Delete
+                <MdDelete size={20} />
             </button>
 
             {isOpen && (

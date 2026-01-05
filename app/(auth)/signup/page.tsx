@@ -1,10 +1,11 @@
 'use client';
 
+import ContinueWithGoogle from '@/components/auth/ContinueWithGoogle';
 import { authClient } from '@/lib/auth-client';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useState } from 'react';
-import { AiOutlineInfoCircle } from 'react-icons/ai';
+import { MdFolder, MdArrowBack, MdInfoOutline } from 'react-icons/md';
 
 export default function SignupPage() {
     const router = useRouter()
@@ -41,57 +42,123 @@ export default function SignupPage() {
     };
 
     return (
-        <div className='h-screen flex items-center justify-center '>
-            <Link href="/" className="absolute top-4 left-4 text-blue-500">
-                Home
-            </Link>
-            <div className='p-3 bg-gray-900 rounded-md shadow-md w-full max-w-md'>
-                <h1 className="text-4xl font-bold mb-4 text-center">Sign Up</h1>
-
-                {error && (
-                    <div className="mb-4 p-3 bg-red-900/50 border border-red-500 rounded-md text-red-200">
-                        {error}
-                    </div>
-                )}
-
-                <form onSubmit={handleSubmit}>
-                    <div className="mb-4">
-                        <label htmlFor="fullName">Full Name:</label>
-                        <input type="text" id="fullName" name="fullName" required className="w-full px-3 py-2 rounded-md bg-gray-800 text-white" />
-                    </div>
-                    <div className="mb-4">
-                        <label htmlFor="username" className="flex items-center gap-2">
-                            Username:
-                            <span className="group relative">
-                                <AiOutlineInfoCircle className="w-4 h-4 text-gray-400 cursor-help" />
-                                <span className="invisible group-hover:visible absolute left-6 top-0 w-48 bg-gray-700 text-white text-xs rounded py-1 px-2 z-10">
-                                    Username should not contain the '@' symbol
-                                </span>
-                            </span>
-                        </label>
-                        <input type="text" id="username" name="username" required className="w-full px-3 py-2 rounded-md bg-gray-800 text-white" />
-                    </div>
-                    <div className="mb-4">
-                        <label htmlFor="email">Email:</label>
-                        <input type="email" id="email" name="email" required className="w-full px-3 py-2 rounded-md bg-gray-800 text-white" />
-                    </div>
-                    <div className="mb-4">
-                        <label htmlFor="password">Password:</label>
-                        <input type="password" id="password" name="password" required className="w-full px-3 py-2 rounded-md bg-gray-800 text-white" />
-                    </div>
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className="w-full bg-green-700 text-white py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                        {loading ? 'Signing up...' : 'Sign Up'}
-                    </button>
-                </form>
-                <p className='text-center mt-2'>
-                    Already have an account? <a href="/login" className="text-blue-500">Login</a>
-                </p>
+        <div className='min-h-screen bg-linear-to-br from-gray-900 via-gray-950 to-black flex items-center justify-center p-4'>
+            <div className='absolute inset-0 overflow-hidden pointer-events-none'>
+                <div className='absolute -top-40 -right-40 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl'></div>
+                <div className='absolute -bottom-40 -left-40 w-80 h-80 bg-purple-600/10 rounded-full blur-3xl'></div>
             </div>
 
+            <Link href="/" className="absolute top-6 left-6 flex items-center gap-2 text-gray-400 hover:text-white transition-colors z-10">
+                <MdArrowBack size={20} />
+                <span className='hidden sm:inline'>Back</span>
+            </Link>
+
+            <div className='w-full max-w-md relative z-10'>
+                <div className='flex items-center justify-center gap-3 mb-8'>
+                    <div className='w-14 h-14 bg-linear-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-lg shadow-blue-600/20'>
+                        <MdFolder className='text-white' size={32} />
+                    </div>
+                    <h1 className="text-3xl font-bold bg-linear-to-r from-white to-gray-300 bg-clip-text text-transparent">KeepNet</h1>
+                </div>
+
+                <div className='bg-gray-900/60 backdrop-blur-xl border border-gray-800/50 rounded-2xl p-8 shadow-2xl'>
+                    <h2 className="text-2xl font-bold mb-2 text-center">Create your account</h2>
+                    <p className='text-sm text-gray-400 text-center mb-6'>
+                        Join KeepNet to organize your digital life
+                    </p>
+
+                    {error && (
+                        <div className="mb-6 p-4 bg-red-900/20 border border-red-500/30 rounded-xl text-red-300 text-sm backdrop-blur-sm">
+                            {error}
+                        </div>
+                    )}
+
+                    <ContinueWithGoogle />
+
+                    <div className='flex items-center gap-4 my-6'>
+                        <div className='flex-1 h-px bg-gray-700/50'></div>
+                        <span className='text-sm text-gray-500 font-medium'>OR</span>
+                        <div className='flex-1 h-px bg-gray-700/50'></div>
+                    </div>
+
+                    <form onSubmit={handleSubmit} className='space-y-4'>
+                        <div>
+                            <label htmlFor="fullName" className='block text-sm font-medium text-gray-300 mb-2'>
+                                Full Name
+                            </label>
+                            <input
+                                type="text"
+                                id="fullName"
+                                name="fullName"
+                                required
+                                placeholder="Enter your full name"
+                                className="w-full px-4 py-3 rounded-xl bg-gray-800/50 border border-gray-700/50 text-white placeholder:text-gray-500 focus:border-blue-500/50 focus:bg-gray-800/80 focus:outline-none transition-all"
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="username" className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
+                                Username
+                                <span className="group relative">
+                                    <MdInfoOutline className="w-4 h-4 text-gray-400 cursor-help" />
+                                    <span className="invisible group-hover:visible absolute left-6 top-0 w-48 bg-gray-800 border border-gray-700 text-white text-xs rounded-lg py-2 px-3 z-10 shadow-xl">
+                                        Username should not contain the '@' symbol
+                                    </span>
+                                </span>
+                            </label>
+                            <input
+                                type="text"
+                                id="username"
+                                name="username"
+                                required
+                                placeholder="Choose a username"
+                                className="w-full px-4 py-3 rounded-xl bg-gray-800/50 border border-gray-700/50 text-white placeholder:text-gray-500 focus:border-blue-500/50 focus:bg-gray-800/80 focus:outline-none transition-all"
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="email" className='block text-sm font-medium text-gray-300 mb-2'>
+                                Email
+                            </label>
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                required
+                                placeholder="Enter your email"
+                                className="w-full px-4 py-3 rounded-xl bg-gray-800/50 border border-gray-700/50 text-white placeholder:text-gray-500 focus:border-blue-500/50 focus:bg-gray-800/80 focus:outline-none transition-all"
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="password" className='block text-sm font-medium text-gray-300 mb-2'>
+                                Password
+                            </label>
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                required
+                                placeholder="Create a password"
+                                className="w-full px-4 py-3 rounded-xl bg-gray-800/50 border border-gray-700/50 text-white placeholder:text-gray-500 focus:border-blue-500/50 focus:bg-gray-800/80 focus:outline-none transition-all"
+                            />
+                        </div>
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="w-full bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-3 rounded-xl font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-blue-600/20 hover:shadow-blue-600/30"
+                        >
+                            {loading ? 'Creating account...' : 'Sign Up'}
+                        </button>
+                    </form>
+
+                    <div className='mt-6 text-center'>
+                        <p className='text-sm text-gray-400'>
+                            Already have an account?{' '}
+                            <Link href="/login" className="text-blue-400 hover:text-blue-300 transition-colors font-medium">
+                                Login
+                            </Link>
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }

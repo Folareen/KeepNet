@@ -15,8 +15,6 @@ model Keep {
   collectionId String
   collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
 
-  isPinned Boolean @default(false)
-
   @@index([userId])
   @@index([collectionId])
   @@map("keep")

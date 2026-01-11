@@ -10,8 +10,7 @@ model Collection {
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  keeps    Keep[]
-  isPinned Boolean @default(false)
+  keeps Keep[]
 
   @@index([userId])
   @@map("collection")

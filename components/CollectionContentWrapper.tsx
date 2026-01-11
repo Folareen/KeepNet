@@ -91,9 +91,9 @@ export default function CollectionContentWrapper({ collection, username, isOwner
 
     return (
         <>
-            <div className='flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-6'>
+            <div className='flex md:flex-row sm:items-start justify-between gap-4 mb-6'>
                 <div className='flex items-start gap-3 sm:gap-4 min-w-0 flex-1'>
-                    <div className='w-10 h-10 sm:w-12 sm:h-12 bg-blue-600/20 rounded-lg flex items-center justify-center shrink-0'>
+                    <div className='w-10 h-10 sm:w-12 sm:h-12 bg-blue-600/20 rounded-lg hidden md:flex items-center justify-center shrink-0'>
                         <MdFolder className='text-blue-500' size={20} />
                     </div>
                     <div className='min-w-0 flex-1'>
@@ -113,13 +113,13 @@ export default function CollectionContentWrapper({ collection, username, isOwner
                 )}
             </div>
 
-            <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-6'>
+            <div className='flex md:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-6'>
                 <h2 className='text-base sm:text-lg font-semibold text-gray-300'>Keeps</h2>
                 {isOwner && <CreateKeepModal collectionId={collection.id} />}
             </div>
 
             {collection.keeps.length > 0 && (
-                <div className="flex items-center space-x-4  mb-6">
+                <div className="flex flex-col md:flex-row md:items-center gap-4  mb-6 ">
                     <div className="relative flex-1">
                         <MdSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500" size={20} />
                         <input

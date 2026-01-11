@@ -76,11 +76,13 @@ export default function CollectionSettingsModal({ collection, username }: Collec
         <>
             <button
                 onClick={() => setIsOpen(true)}
-                className="flex items-center gap-2 px-3 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors"
+                className="flex items-center gap-2 px-3 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors "
                 title="Collection Settings"
             >
                 <MdSettings size={20} />
-                Settings
+                <p className="hidden md:block">
+                    Settings
+                </p>
             </button>
 
             {isOpen && (

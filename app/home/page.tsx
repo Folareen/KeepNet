@@ -21,7 +21,7 @@ export default async function HomePage() {
             />
             <div className='space-y-6'>
                 <div className='bg-gray-900/40 border border-gray-800 rounded-xl p-4 sm:p-6'>
-                    <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0 mb-4'>
+                    <div className='flex flex-row sm:items-center justify-between gap-3 sm:gap-0 mb-4'>
                         <h2 className='text-base sm:text-lg font-semibold text-gray-300'>Account</h2>
                         <EditAccountModal user={user!} />
                     </div>
@@ -47,7 +47,7 @@ export default async function HomePage() {
                 </div>
 
                 <div className='bg-gray-900/40 border border-gray-800 rounded-xl p-4 sm:p-6'>
-                    <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-6'>
+                    <div className='flex sm:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-6'>
                         <h2 className='text-base sm:text-lg font-semibold text-gray-300'>Collections</h2>
                         <CreateCollectionModal />
                     </div>

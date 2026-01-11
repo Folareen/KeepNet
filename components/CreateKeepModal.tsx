@@ -3,6 +3,7 @@
 import { createKeep } from "@/actions/createKeep";
 import { useState } from "react";
 import { useFormStatus } from "react-dom";
+import { MdAdd } from "react-icons/md";
 
 type CreateKeepModalProps = {
     collectionId?: string;
@@ -41,11 +42,12 @@ export default function CreateKeepModal({ collectionId }: CreateKeepModalProps) 
         <>
             <button
                 onClick={() => setIsOpen(true)}
-                className='flex items-center gap-1 sm:gap-2 bg-green-600 px-3 sm:px-4 py-2 rounded-lg hover:bg-green-700 transition-colors text-sm font-medium'
+                className='flex items-center gap-1 sm:gap-2 bg-green-600 px-3 sm:px-4 py-2 rounded-lg hover:bg-green-700 transition-colors text-sm font-medium w-max'
             >
-                <span className='text-sm sm:text-base'>+</span>
+                {/* <span className='text-sm sm:text-base'>+</span> */}
+                <MdAdd size={20} />
                 <span className='hidden xs:inline'>New Keep</span>
-                <span className='xs:hidden'>New</span>
+                <span className='hidden md:block'>New</span>
             </button>
 
             {isOpen && (

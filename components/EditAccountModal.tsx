@@ -153,10 +153,10 @@ export default function EditAccountModal({ user }: EditAccountModalProps) {
         <>
             <button
                 onClick={() => setIsOpen(true)}
-                className="flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors border border-gray-700"
+                className="flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors border border-gray-700 w-max"
             >
                 <MdSettings size={18} />
-                <span className="hidden sm:inline text-sm font-medium">Settings</span>
+                <span className="hidden sm:block text-sm font-medium">Settings</span>
             </button>
 
             {isOpen && (

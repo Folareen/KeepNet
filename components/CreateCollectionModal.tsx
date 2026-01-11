@@ -37,7 +37,7 @@ export default function CreateCollectionModal() {
         <>
             <button
                 onClick={() => setIsOpen(true)}
-                className='flex items-center gap-2 bg-blue-600 px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium text-sm'
+                className='flex items-center gap-2 bg-blue-600 px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium text-sm w-max'
             >
                 <MdAdd size={20} />
                 <span className="hidden sm:inline">New Collection</span>

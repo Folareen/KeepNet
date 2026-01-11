@@ -21,7 +21,7 @@ export default async function Home() {
             </Link>
             <Link
               href="/signup"
-              className="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors font-medium"
+              className="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors font-medium hidden md:block"
             >
               Get Started
             </Link>
@@ -41,25 +41,25 @@ export default async function Home() {
 
         <div className="container mx-auto max-w-6xl relative z-10">
           <div className="text-center space-y-8">
-            <div className="flex items-center justify-center gap-4 text-5xl md:text-6xl lg:text-7xl font-bold">
+            <div className="flex items-center justify-center gap-4 text-2xl md:text-6xl lg:text-7xl font-bold">
               <span className="text-blue-500">Keep.</span>
               <span className="text-purple-500">Organize.</span>
               <span className="text-green-500">Share.</span>
             </div>
-            <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-lg md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
               Store your notes, files, and media in one place. Share with simple links.
               Organize in collections. Password-protect what matters.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6">
               <Link
                 href="/signup"
-                className="px-10 py-5 bg-blue-600 hover:bg-blue-700 rounded-lg text-xl font-semibold transition-all transform hover:scale-105 shadow-lg shadow-blue-600/50"
+                className="px-10 py-5 bg-blue-600 hover:bg-blue-700 rounded-lg text-lg md:text-xl font-semibold transition-all transform hover:scale-105 shadow-lg shadow-blue-600/50"
               >
                 Start Keeping Now
               </Link>
               <Link
                 href="/login"
-                className="px-10 py-5 bg-gray-800 hover:bg-gray-700 rounded-lg text-xl font-semibold transition-all border border-gray-700"
+                className="px-10 py-5 bg-gray-800 hover:bg-gray-700 rounded-lg text-lg md:text-xl font-semibold transition-all border border-gray-700"
               >
                 Login
               </Link>

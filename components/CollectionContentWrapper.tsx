@@ -19,26 +19,45 @@ type CollectionContentWrapperProps = {
             title: string;
             description: string | null;
             type: string;
+            updatedAt: Date | null;
         }>;
     };
     username: string;
     isOwner: boolean;
 }
 
+type SortOption = 'name' | 'updated';
+
 export default function CollectionContentWrapper({ collection, username, isOwner }: CollectionContentWrapperProps) {
     const [isUnlocked, setIsUnlocked] = useState(collection.visibility !== 'LOCKED' || isOwner);
     const [error, setError] = useState('');
     const [searchQuery, setSearchQuery] = useState("");
+    const [sortOption, setSortOption] = useState<SortOption>('updated');
+
+    const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setSortOption(e.target.value as SortOption);
+    };
 
     const filteredKeeps = useMemo(() => {
+        let result = collection.keeps;
         if (!searchQuery.trim()) {
-            return collection.keeps;
+            result = collection.keeps;
+        }
+        if (sortOption === 'name') {
+            result = [...result].sort((a, b) => a.title.localeCompare(b.title));
+        } else if (sortOption === 'updated') {
+            result = [...result].sort((a, b) => {
+                if (a.updatedAt && b.updatedAt) {
+                    return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+                }
+                return b.id.localeCompare(a.id);
+            });
         }
 
-        return collection.keeps.filter(keep =>
+        return result.filter(keep =>
             keep.title.toLowerCase().includes(searchQuery.toLowerCase())
         );
-    }, [collection.keeps, searchQuery]);
+    }, [collection.keeps, searchQuery, sortOption]);
 
     const handlePasswordSubmit = async (password: string) => {
         const isValid = await verifyCollectionPassword(collection.id, password);
@@ -100,15 +119,27 @@ export default function CollectionContentWrapper({ collection, username, isOwner
             </div>
 
             {collection.keeps.length > 0 && (
-                <div className="relative mb-6">
-                    <MdSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500" size={20} />
-                    <input
-                        type="text"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        placeholder="Search keeps..."
-                        className="w-full pl-12 pr-4 py-3 rounded-lg bg-gray-900/40 text-white border border-gray-800 focus:border-blue-500 focus:outline-none transition-colors"
-                    />
+                <div className="flex items-center space-x-4  mb-6">
+                    <div className="relative flex-1">
+                        <MdSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500" size={20} />
+                        <input
+                            type="text"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            placeholder="Search keeps..."
+                            className="w-full pl-12 pr-4 py-3 rounded-lg bg-gray-900/40 text-white border border-gray-800 focus:border-blue-500 focus:outline-none transition-colors"
+                        />
+                    </div>
+                    <div>
+                        <select
+                            value={sortOption}
+                            onChange={handleSortChange}
+                            className="bg-gray-900/40 border border-gray-800 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500"
+                        >
+                            <option value="updated">Recently Updated</option>
+                            <option value="name">Name (A-Z)</option>
+                        </select>
+                    </div>
                 </div>
             )}
 

@@ -44,7 +44,8 @@ export default async function CollectionPage({ params }: { params: Promise<{ use
                                 id: keep.id,
                                 title: keep.title,
                                 description: keep.description,
-                                type: keep.type
+                                type: keep.type,
+                                updatedAt: keep.updatedAt,
                             }))
                         }}
                         username={username}

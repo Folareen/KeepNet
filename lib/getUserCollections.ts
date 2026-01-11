@@ -10,7 +10,8 @@ export const getUserCollections = async (userId: string) => {
             visibility: true,
             _count: {
                 select: { keeps: true }
-            }
+            },
+            updatedAt: true
         },
         orderBy: [
             { updatedAt: 'desc' }

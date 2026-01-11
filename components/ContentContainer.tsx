@@ -386,7 +386,7 @@ export default function ContentContainer({ keepType, content, title, isOwner, ke
         return null;
     };
 
-    const FullscreenView = () => {
+    if (isFullscreen) {
         if (keepType === 'TEXT') {
             return (
                 <div className='fixed inset-0 z-50 bg-gray-950'>
@@ -461,12 +461,7 @@ export default function ContentContainer({ keepType, content, title, isOwner, ke
                 </div>
             );
         }
-
         return null;
-    };
-
-    if (isFullscreen) {
-        return <FullscreenView />;
     }
 
     return (

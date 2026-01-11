@@ -61,7 +61,7 @@ export default async function Home() {
                 href="/login"
                 className="px-10 py-5 bg-gray-800 hover:bg-gray-700 rounded-lg text-xl font-semibold transition-all border border-gray-700"
               >
-                Sign In
+                Login
               </Link>
             </div>
           </div>
